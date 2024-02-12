@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-microservice-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-microservice
+  template:
+    metadata:
+      labels:
+        app: payment-microservice
+    spec:
+      containers:
+      - name: payment-microservice
+        image: payment-microservice:latest
+        ports:
+        - containerPort: 5001

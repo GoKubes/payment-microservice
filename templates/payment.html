@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9e3e6; /* Pastel pink background color */
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333; /* Dark text color */
+        }
+
+        div {
+            background-color: #fff; /* White background color */
+            padding: 20px;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+        }
+
+        button {
+            background-color: #ff7f9c; /* Pink button color */
+            color: #fff; /* White text color */
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff5e7f; /* Darker pink color on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Payment Information</h1>
+    <div>
+        <p>User ID: <span id="user_id"></span></p>
+        <p>Payment ID: <span id="payment_id"></span></p>
+        <p>Amount Owed: $<span id="amount_owed"></span></p>
+    </div>
+    <button onclick="processPayment()">Confirm Payment</button>
+
+    <script>
+        // This example assumes that the data is directly embedded into the page by the Flask app.
+        // If the data is being fetched asynchronously, the approach would need to be adjusted.
+        
+        function displayPaymentInfo() {
+            // Example values - replace these with dynamic data passed from Flask
+            const userId = "{{ user_id }}"; // Flask injects user_id
+            const paymentId = "{{ payment_id }}"; // Flask injects payment_id
+            const amountOwed = "{{ amount_owed }}"; // Flask injects amount_owed
+            
+            document.getElementById('user_id').textContent = userId;
+            document.getElementById('payment_id').textContent = paymentId;
+            document.getElementById('amount_owed').textContent = amountOwed;
+        }
+        function processPayment() {
+            // Show a pop-up message indicating successful payment
+            alert("Payment was successful!");
+        }
+        // Call displayPaymentInfo on page load to display the payment information
+        window.onload = displayPaymentInfo;
+    </script>
+</body>
+</html>
+
