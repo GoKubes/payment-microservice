@@ -1,9 +1,26 @@
 from flask import Flask, request, jsonify, render_template
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired, Length
 import sqlite3
 import random
+import os
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
 
+@app.route('/templates/images/<filename>')
+def send_image(filename):
+    return send_from_directory('templates/images', filename)
+
+class PaymentForm(FlaskForm):
+    card_number = StringField('Card Number', validators=[DataRequired(), Length(min=16, max=16, message='Card number should be 16 digits')])
+    card_holder = StringField('Card Holder', validators=[DataRequired()])
+    expiry_date = StringField('Expiry Date', validators=[DataRequired(), Length(min=5, max=5, message='Expiry date should be in MM/YY format')])
+    cvv = StringField('CVV', validators=[DataRequired(), Length(min=3, max=3, message='CVV should be 3 digits')])
+    submit = SubmitField('Submit Payment')
 # Database initialization
 def init_db():
     conn = sqlite3.connect('payments.db')
@@ -27,7 +44,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-@app.route('/')
+@app.route('/',methods=['GET','POST'])
 def home():
     # Insert a new user for demonstration (adjust as needed for your application)
     conn = sqlite3.connect('payments.db')
@@ -43,9 +60,12 @@ def home():
     conn.commit()
     payment_id = c.lastrowid
     conn.close()
-    
+    form = PaymentForm()
+    if form.validate_on_submit():
+        # Handle the form submission here, e.g. send the payment to your payment processor
+        pass
     # Render the HTML template with user_id, payment_id, and amount_owed
-    return render_template('payment.html', user_id=user_id, payment_id=payment_id, amount_owed=amount_owed)
+    return render_template('payment.html', form=form, user_id=user_id, payment_id=payment_id, amount_owed=amount_owed)
 
 @app.route('/payment/<int:user_id>', methods=['GET'])
 def get_amount_owed(user_id):
@@ -74,7 +94,6 @@ def update_payment(user_id):
     conn.commit()
     conn.close()
     return jsonify({'message': 'Payment updated successfully', 'user_id': user_id, 'amount_owed': amount_owed})
-
 
 if __name__ == '__main__':
     init_db()
