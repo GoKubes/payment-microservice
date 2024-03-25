@@ -15,12 +15,6 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 def send_image(filename):
     return send_from_directory('templates/images', filename)
 
-class PaymentForm(FlaskForm):
-    card_number = StringField('Card Number', validators=[DataRequired(), Length(min=16, max=16, message='Card number should be 16 digits')])
-    card_holder = StringField('Card Holder', validators=[DataRequired()])
-    expiry_date = StringField('Expiry Date', validators=[DataRequired(), Length(min=5, max=5, message='Expiry date should be in MM/YY format')])
-    cvv = StringField('CVV', validators=[DataRequired(), Length(min=3, max=3, message='CVV should be 3 digits')])
-    submit = SubmitField('Submit Payment')
 # Database initialization
 def init_db():
     conn = sqlite3.connect('payments.db')
@@ -29,7 +23,9 @@ def init_db():
     c.execute('''
         CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+            first_name TEXT,
+            last_name TEXT,
+            email TEXT
         )
     ''')
     # Create payments table with a foreign key reference to users
@@ -44,7 +40,13 @@ def init_db():
     conn.commit()
     conn.close()
 
+class UserPaymentForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+
 @app.route('/',methods=['GET','POST'])
+
 def home():
     # Insert a new user for demonstration (adjust as needed for your application)
     conn = sqlite3.connect('payments.db')
