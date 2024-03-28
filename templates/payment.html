@@ -34,6 +34,7 @@
         window.onload = displayPaymentInfo;
     </script>
 
+  <form method="POST">
     <div class="border-b border-gray-900/10 pb-12 p-6 mx-auto max-w-2xl text-center">
         <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Total: $ {{ amount_owed}} </h2>
         <p class="mt-2 text-lg leading-8 text-gray-600">user ID: {{user_id}}, Payment ID: {{payment_id}}</p>
@@ -80,7 +81,7 @@
                 </div>
             </div>
             <div class="mt-2">
-                <input type="text" name="card-number" id="card-number" autocomplete="card-number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <input type="text" name="card-number" id="card-number" autocomplete="card_number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             </div>
         </div>
 
@@ -107,7 +108,7 @@
           <div class="sm:col-span-2">
             <label for="region" class="block text-sm font-medium leading-6 text-gray-900 text-left">Expiration Date</label>
               <div class="mt-2">
-                  <input type="text" name="expiry_date" id="expiry_date" autocomplete="expiry_date" class="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                  <input type="text" name="card_expiry" id="card_expiry" autocomplete="card_expiry" class="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
               </div>
           </div>
           <!-- <div class="sm:col-span-2">
@@ -134,8 +135,8 @@
         {{ form.card_holder.label }} {{ form.card_holder() }}
         {{ form.expiry_date.label }} {{ form.expiry_date() }}
         {{ form.cvv.label }} {{ form.cvv() }}
-        {{ form.submit() }}
-    </form> -->
+        {{ form.submit() }} -->
+  </form> 
 
 </body>
 </html>

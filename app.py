@@ -1,13 +1,12 @@
 from flask import Flask, request, jsonify, render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired
 import sqlite3
 import random
-import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY'] = 'gokubes'
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
@@ -34,17 +33,25 @@ def init_db():
             payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             amount_owed REAL,
+            card_number INTEGER,
+            card_expiry INTEGER,
+            cvv INTEGER,
             FOREIGN KEY (user_id) REFERENCES users(user_id)
         )
     ''')
     conn.commit()
     conn.close()
 
-class UserPaymentForm(FlaskForm):
+class PaymentForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
-
+    card_number = StringField('Card Number', validators=[DataRequired()])
+    expiry_date = StringField('Card Expiry', validators=[DataRequired()])
+    cvv = StringField('CVV', validators=[DataRequired()])
+    card_holder = StringField('Card Holder', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+    
 @app.route('/',methods=['GET','POST'])
 
 def home():
@@ -63,11 +70,19 @@ def home():
     payment_id = c.lastrowid
     conn.close()
     form = PaymentForm()
+    card_number = None
+    expiry_date = None
+    cvv = None
+    card_holder = None
     if form.validate_on_submit():
         # Handle the form submission here, e.g. send the payment to your payment processor
+        card_number = form.card_number.data
+        expiry_date = form.expiry_date.data
+        cvv = form.cvv.data
+        card_holder = form.card_holder.data
         pass
     # Render the HTML template with user_id, payment_id, and amount_owed
-    return render_template('payment.html', form=form, user_id=user_id, payment_id=payment_id, amount_owed=amount_owed)
+    return render_template('payment.html', form=form, user_id=user_id, payment_id=payment_id, amount_owed=amount_owed,card_number=card_number,expiry_date=expiry_date,cvv=cvv)
 
 @app.route('/payment/<int:user_id>', methods=['GET'])
 def get_amount_owed(user_id):
