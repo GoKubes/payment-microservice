@@ -15,5 +15,5 @@ kubectl apply -f service.yaml
 # Wait for the deployment to be ready
 kubectl rollout status deployment/payment-deployment
 
-echo "Deployment complete! Access the service at the following URL:"
+echo "Deployment complete! Access the service at the following URL: http://127.0.0.1:3000/payment.html"
 minikube service payment-microservice-service
